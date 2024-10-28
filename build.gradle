@@ -22,7 +22,6 @@ dependencies {
     testImplementation 'io.quarkus:quarkus-junit5'
     testImplementation 'io.rest-assured:rest-assured'
     testImplementation 'org.awaitility:awaitility:4.2.2'
-    testImplementation 'org.wiremock:wiremock-standalone:3.9.1'
     testImplementation 'com.auth0:java-jwt:4.4.0'
 }
 

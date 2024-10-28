@@ -2,6 +2,7 @@ package org.acme;
 
 import io.smallrye.jwt.auth.principal.JWTParser;
 import io.smallrye.jwt.auth.principal.ParseException;
+import io.smallrye.mutiny.Uni;
 import io.smallrye.reactive.messaging.MutinyEmitter;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -26,14 +27,13 @@ public class GreetingResource {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
-    public String hello() throws ParseException {
+    public Uni<String> hello() throws ParseException {
         String greeting = "Hello Quarkus";
 
         JsonWebToken jsonWebToken = jwtParser.parse(jwt.getRawToken());
         Message<String> message = Message.of(jsonWebToken.getClaim("myClaim").toString()).addMetadata(jsonWebToken);
 
-        channelA.sendMessageAndForget(message);
-
-        return greeting;
+        return channelA.sendMessage(message)
+                .onItem().transform(v -> greeting);
     }
 }
